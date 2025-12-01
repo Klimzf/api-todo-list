@@ -44,4 +44,19 @@ class TaskApiTest extends TestCase
 
         $this->assertDatabaseMissing('tasks', ['id' => $task->id]);
     }
+
+    /** @test */
+    public function can_update_task()
+    {
+        $task = Task::factory()->create();
+
+        $response = $this->putJson("/api/tasks/{$task->id}", [
+            'title' => 'New Task',
+            'status' => 'completed'
+        ]);
+
+        $response->assertStatus(200);
+
+        $this->assertDatabaseHas('tasks', ['title' => 'New Task']);
+    }
 }
